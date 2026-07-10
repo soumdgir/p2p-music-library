@@ -203,12 +203,12 @@ const uploads = document.getElementById('up');
     const myUniqueId = `${LOBBY_ROOM_ID}-${Math.floor(Math.random() * 3)}`;
 
     const peer = new Peer(myUniqueId, {
-        host: '0.peerjs.com',
-        port: 443,
-        path: '/',
-        secure: true,
-        debug: 1
-    }); 
+        host: 'localhost', 
+        port: 8080, 
+        path: '/myapp',
+        secure: false, 
+        debug: 3
+    });
 
     const connectedPeers = new Set();
     
