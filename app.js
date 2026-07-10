@@ -171,6 +171,35 @@ const uploads = document.getElementById('up');
 
     console.log("P2P紐付け完了:", p2pbox);
 
+        const albumGrid = document.getElementById('album-grid');
+    if (albumGrid) {
+        albumGrid.innerHTML = '';
+        for (const item of p2pbox) {
+            const fileName = item.path.toLowerCase();
+            const isImage = (fileName.endsWith('.jpeg') || fileName.endsWith('.jpg') || fileName.endsWith('.png'));
+            if (isImage) {
+                const imageUrl = URL.createObjectURL(item.binary);
+                const imgElement = document.createElement('img');
+                imgElement.src = imageUrl;
+                imgElement.className = 'album-art';
+                imgElement.style.cursor = 'pointer';
+                imgElement.addEventListener('click', () => {
+                    const currentFolder = item.path.substring(0, item.path.lastIndexOf('/') + 1);
+                    const matchingAudio = p2pbox.find(a => a.path.startsWith(currentFolder) && a.path.toLowerCase().endsWith('.mp3'));
+                    if (matchingAudio) {
+                        const audioPlayer = document.getElementById('main-player');
+                        if (audioPlayer) {
+                            audioPlayer.src = URL.createObjectURL(matchingAudio.binary);
+                            audioPlayer.play();
+                            alert(`${currentFolder} の曲を再生します`);
+                        }
+                    }
+                });
+                albumGrid.appendChild(imgElement);
+            }
+        }
+    }
+    
 const peer = new Peer({
         host: '0.peerjs.com',
         port: 443,
