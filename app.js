@@ -201,7 +201,7 @@ const uploads = document.getElementById('up');
 const HOST_ID = "p2p-music-library-main-host-room";
     
     const peer = new Peer(HOST_ID, {
-        host: '://peerjs.com',
+        host: 'peerjs.com',
         port: 443,
         path: '/',
         secure: true,
