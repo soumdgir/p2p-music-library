@@ -171,7 +171,7 @@ const uploads = document.getElementById('up');
 
     console.log("P2P紐付け完了:", p2pbox);
 
-        const albumGrid = document.getElementById('album-grid');
+    const albumGrid = document.getElementById('album-grid');
     if (albumGrid) {
         albumGrid.innerHTML = '';
         for (const item of p2pbox) {
@@ -191,15 +191,15 @@ const uploads = document.getElementById('up');
                         if (audioPlayer) {
                             audioPlayer.src = URL.createObjectURL(matchingAudio.binary);
                             audioPlayer.play();
-                            alert(`${currentFolder} の曲を再生します`);
+                            alert(`${currentFolder} を再生します`);
                         }
                     }
                 });
                 albumGrid.appendChild(imgElement);
             }
         }
-    }
-    
+    } 
+
 const peer = new Peer({
         host: '0.peerjs.com',
         port: 443,
