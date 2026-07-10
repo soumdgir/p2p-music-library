@@ -51,18 +51,16 @@ function setupReceivedData(conn, p2pbox) {
         } 
     };
 
-    // connが本物のP2P接続オブジェクトの場合
     if (conn && typeof conn.on === 'function') {
         conn.on('data', (incomingBox) => {
             processData(incomingBox);
         });
     } else {
-        // connがダミー（自分自身）の場合は、引数として届いたp2pboxをそのまま直接処理する
+
         processData(p2pbox);
     }
 }
 const userLanguage = navigator.language || navigator.userLanguage;
-// userLanguage（ブラウザの言語設定）を覗き見るIF文の中
 if (userLanguage.startsWith('ja')) {
     document.getElementById('siteName').innerText = 'P2P MUSIC LIBRARY';
     document.getElementById('Search').innerText = '検索';
@@ -200,13 +198,15 @@ const uploads = document.getElementById('up');
         }
     } 
 
-const peer = new Peer({
-        host: '0.peerjs.com',
+const HOST_ID = "p2p-music-library-main-host-room";
+    
+    const peer = new Peer(HOST_ID, {
+        host: '://peerjs.com',
         port: 443,
         path: '/',
         secure: true,
         debug: 1
-    }); 
+    });
 
     const connectedPeers = new Set();
 
