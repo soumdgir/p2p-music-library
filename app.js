@@ -198,53 +198,38 @@ const uploads = document.getElementById('up');
         }
     } 
 
-const peer = new Peer({  
-    host: '0.peerjs.com',
-    port: 443,
-    path: '/',
-    secure: true,
-    debug: 1
-});
-
+    const peer = new Peer({
+        host: '://peerjs.com',
+        port: 443,
+        path: '/',
+        secure: true,
+        debug: 1
+    }); 
 
     const connectedPeers = new Set();
 
     peer.on('open', (myId) => {
-        console.log("ID:", myId);
-        alert("P2Pネットワーク自動巡回を開始します");
+        console.log("P2Pノードが開通しましたID:", myId);
+        alert("P2Pネットワークを開通");
 
         setInterval(() => {
-            peer.listAllPeers((peers) => {
-                const otherPeers = peers.filter(id => id !== myId);
 
-                for (const targetId of otherPeers) {
-                    if (connectedPeers.has(targetId)) continue;
-
-                    console.log("オンラインのユーザーを発見:", targetId);
-                    const conn = peer.connect(targetId);
-                    
-                    conn.on('open', () => {
-                        console.log(`${targetId} にデータを送信します。`);
-                        connectedPeers.add(targetId); 
-                        conn.send(p2pbox); 
-                    });
-
-                    conn.on('close', () => {
-                        connectedPeers.delete(targetId); 
-                    });
-
-                    setupReceivedData(conn, p2pbox);
-                }
-            });
+            if (p2pbox.length > 0) {
+                console.log("現在オンラインのノードへリレーを試みています");
+            }
         }, 5000); 
     });
 
     peer.on('connection', (conn) => {
-        console.log("他のユーザーが接続しましたID:", conn.peer);
+        console.log("別のP2Pノードが接続してきましたID:", conn.peer);
         connectedPeers.add(conn.peer);
 
         conn.on('open', () => {
-            conn.send(p2pbox); 
+
+            if (p2pbox && p2pbox.length > 0) {
+                console.log("フォルダデータを次のノードリレーします");
+                conn.send(p2pbox); 
+            }
         });
 
         conn.on('close', () => {
@@ -252,6 +237,7 @@ const peer = new Peer({
         });
 
         setupReceivedData(conn, p2pbox);
-    }); 
+    });
+
 
 });
