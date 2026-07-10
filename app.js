@@ -198,7 +198,7 @@ const uploads = document.getElementById('up');
         }
     } 
 
-    const LOBBY_ROOM_ID = "p2p-music-library-global-lobby";
+    const LOBBY_ROOM_ID = "p2proom9";
 
     const myUniqueId = `${LOBBY_ROOM_ID}-${Math.floor(Math.random() * 100)}`;
 
