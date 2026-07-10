@@ -211,13 +211,13 @@ const uploads = document.getElementById('up');
     }); 
 
     const connectedPeers = new Set();
-
+    
     peer.on('open', (myId) => {
         console.log("P2Pノードが開通しましたID:", myId);
         alert("P2Pネットワークを開通しました");
 
         setInterval(() => {
-            for (let i = 0; i <= 99; i++) {
+            for (let i = 0; i <= 2; i++) {
                 const targetId = `${LOBBY_ROOM_ID}-${i}`;
                 
                 // 自分自身や、すでに繋がっている相手ならスルー
