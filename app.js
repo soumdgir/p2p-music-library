@@ -107,7 +107,13 @@ const uploads = document.getElementById('up');
     }
 
     console.log("P2P紐付け完了:", p2pbox);
-    setupReceivedData({ on: () => {} }, p2pbox);
+    setupReceivedData({
+        on: (event, callback) => {
+            if (event === 'data') {
+                setTimeout(() => callback(p2pbox), 100);
+            }
+        }
+    });
 
 const peer = new Peer({
         host: '0.peerjs.com',
