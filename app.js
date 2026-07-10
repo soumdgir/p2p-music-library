@@ -198,7 +198,11 @@ const uploads = document.getElementById('up');
         }
     } 
 
-    const peer = new Peer({
+    const LOBBY_ROOM_ID = "p2p-music-library-global-lobby";
+
+    const myUniqueId = `${LOBBY_ROOM_ID}-${Math.floor(Math.random() * 100)}`;
+
+    const peer = new Peer(myUniqueId, {
         host: '0.peerjs.com',
         port: 443,
         path: '/',
@@ -210,25 +214,41 @@ const uploads = document.getElementById('up');
 
     peer.on('open', (myId) => {
         console.log("P2Pノードが開通しましたID:", myId);
-        alert("P2Pネットワークを開通");
+        alert("P2Pネットワークを開通しました");
 
         setInterval(() => {
+            for (let i = 0; i <= 10; i++) {
+                const targetId = `${LOBBY_ROOM_ID}-${i}`;
+                
+                // 自分自身や、すでに繋がっている相手ならスルー
+                if (targetId === myId || connectedPeers.has(targetId)) continue;
 
-            if (p2pbox.length > 0) {
-                console.log("現在オンラインのノードへリレーを試みています");
+                console.log("近隣のノードへ接続を試みます:", targetId);
+                const conn = peer.connect(targetId);
+                
+                conn.on('open', () => {
+                    console.log(`${targetId} にデータを送信します`);
+                    connectedPeers.add(targetId); 
+                    conn.send(p2pbox); 
+                });
+
+                conn.on('close', () => {
+                    connectedPeers.delete(targetId); 
+                });
+
+                setupReceivedData(conn, p2pbox);
             }
         }, 5000); 
     });
 
     peer.on('connection', (conn) => {
-        console.log("別のP2Pノードが接続してきましたID:", conn.peer);
+        console.log("別のP2Pノードがあなたを発見して接続してきました！ID:", conn.peer);
         connectedPeers.add(conn.peer);
 
         conn.on('open', () => {
-
             if (p2pbox && p2pbox.length > 0) {
-                console.log("フォルダデータを次のノードリレーします");
-                conn.send(p2pbox); 
+                console.log("データを次のノードへリレーします");
+                conn.send(p2pbox);
             }
         });
 
@@ -239,5 +259,4 @@ const uploads = document.getElementById('up');
         setupReceivedData(conn, p2pbox);
     });
 
-
-});
+}); 
