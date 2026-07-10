@@ -200,7 +200,7 @@ const uploads = document.getElementById('up');
 
     const LOBBY_ROOM_ID = "p2proom9";
 
-    const myUniqueId = `${LOBBY_ROOM_ID}-${Math.floor(Math.random() * 100)}`;
+    const myUniqueId = `${LOBBY_ROOM_ID}-${Math.floor(Math.random() * 3)}`;
 
     const peer = new Peer(myUniqueId, {
         host: '0.peerjs.com',
