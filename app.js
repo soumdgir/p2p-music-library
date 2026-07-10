@@ -215,35 +215,37 @@ const HOST_ID = "p2p-music-library";
         alert("P2Pネットワーク自動巡回を開始します");
 
         setInterval(() => {
-            const HOST_ID = "p2p-music-library-main-host-room";
-            
-            if (myId !== HOST_ID && !connectedPeers.has(HOST_ID)) {
-                console.log("メインへ接続を試みます");
-                const conn = peer.connect(HOST_ID);
-                
-                conn.on('open', () => {
-                    console.log("マッチング成功、データを送信します");
-                    connectedPeers.add(HOST_ID); 
-                    conn.send(p2pbox); 
-                });
+            peer.listAllPeers((peers) => {
+                const otherPeers = peers.filter(id => id !== myId);
 
-                conn.on('close', () => {
-                    connectedPeers.delete(HOST_ID); 
-                });
+                for (const targetId of otherPeers) {
+                    if (connectedPeers.has(targetId)) continue;
 
-                setupReceivedData(conn, p2pbox);
-            }
+                    console.log("オンラインのユーザーを発見:", targetId);
+                    const conn = peer.connect(targetId);
+                    
+                    conn.on('open', () => {
+                        console.log(`${targetId} にデータを送信します。`);
+                        connectedPeers.add(targetId); 
+                        conn.send(p2pbox); 
+                    });
+
+                    conn.on('close', () => {
+                        connectedPeers.delete(targetId); 
+                    });
+
+                    setupReceivedData(conn, p2pbox);
+                }
+            });
         }, 5000); 
-
     });
 
     peer.on('connection', (conn) => {
-        console.log("別のユーザーが接続しました");
+        console.log("他のユーザーが接続しましたID:", conn.peer);
         connectedPeers.add(conn.peer);
 
         conn.on('open', () => {
-    
-            conn.send(p2pbox.data); 
+            conn.send(p2pbox); 
         });
 
         conn.on('close', () => {
@@ -251,6 +253,6 @@ const HOST_ID = "p2p-music-library";
         });
 
         setupReceivedData(conn, p2pbox);
-    });
+    }); 
 
 });
