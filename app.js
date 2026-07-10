@@ -199,7 +199,7 @@ const uploads = document.getElementById('up');
     } 
 
     const peer = new Peer({
-        host: '://peerjs.com',
+        host: '0.peerjs.com',
         port: 443,
         path: '/',
         secure: true,
