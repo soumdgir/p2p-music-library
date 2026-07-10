@@ -123,31 +123,26 @@ const peer = new Peer({
         alert("P2Pネットワーク自動巡回を開始します");
 
         setInterval(() => {
-            peer.listAllPeers((peers) => {
-                const otherPeers = peers.filter(id => id !== myId);
-
-                for (const targetId of otherPeers) {
+            const HOST_ID = "p2p-music-library-main-host-room";
             
-                    if (connectedPeers.has(targetId)) continue;
+            if (myId !== HOST_ID && !connectedPeers.has(HOST_ID)) {
+                console.log("メインへ接続を試みます");
+                const conn = peer.connect(HOST_ID);
+                
+                conn.on('open', () => {
+                    console.log("マッチング成功、データを送信します");
+                    connectedPeers.add(HOST_ID); 
+                    conn.send(p2pbox); 
+                });
 
-                    console.log("新しいオンラインのユーザーと自動接続します:", targetId);
-                    const conn = peer.connect(targetId);
-                    
-                    conn.on('open', () => {
-                        console.log(`${targetId} データを送信します`);
-                        connectedPeers.add(targetId); 
-               
-                        conn.send(p2pbox.data); 
-                    });
+                conn.on('close', () => {
+                    connectedPeers.delete(HOST_ID); 
+                });
 
-                    conn.on('close', () => {
-                        connectedPeers.delete(targetId); 
-                    });
-
-                    setupReceivedData(conn, p2pbox);
-                }
-            });
+                setupReceivedData(conn, p2pbox);
+            }
         }, 5000); 
+
     });
 
     peer.on('connection', (conn) => {
