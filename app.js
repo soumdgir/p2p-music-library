@@ -198,15 +198,14 @@ const uploads = document.getElementById('up');
         }
     } 
 
-const HOST_ID = "p2p-music-library";
-    
-    const peer = new Peer(HOST_ID, {
-        host: 'peerjs.com',
-        port: 443,
-        path: '/',
-        secure: true,
-        debug: 1
-    });
+const peer = new Peer({  
+    host: 'peerjs.com',
+    port: 443,
+    path: '/',
+    secure: true,
+    debug: 1
+});
+
 
     const connectedPeers = new Set();
 
