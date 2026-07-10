@@ -217,7 +217,7 @@ const uploads = document.getElementById('up');
         alert("P2Pネットワークを開通しました");
 
         setInterval(() => {
-            for (let i = 0; i <= 10; i++) {
+            for (let i = 0; i <= 99; i++) {
                 const targetId = `${LOBBY_ROOM_ID}-${i}`;
                 
                 // 自分自身や、すでに繋がっている相手ならスルー
