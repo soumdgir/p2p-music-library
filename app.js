@@ -198,7 +198,7 @@ const uploads = document.getElementById('up');
         }
     } 
 
-const HOST_ID = "p2p-music-library-main-host-room";
+const HOST_ID = "p2p-music-library";
     
     const peer = new Peer(HOST_ID, {
         host: 'peerjs.com',
