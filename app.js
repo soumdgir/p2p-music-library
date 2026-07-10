@@ -216,6 +216,8 @@ const uploads = document.getElementById('up');
         console.log("P2Pノードが開通しましたID:", myId);
         alert("P2Pネットワークを開通しました");
 
+        if (p2pbox.length > 0) {
+        
         setInterval(() => {
             for (let i = 0; i <= 2; i++) {
                 const targetId = `${LOBBY_ROOM_ID}-${i}`;
@@ -239,6 +241,7 @@ const uploads = document.getElementById('up');
                 setupReceivedData(conn, p2pbox);
             }
         }, 5000); 
+    }
     });
 
     peer.on('connection', (conn) => {
@@ -259,4 +262,4 @@ const uploads = document.getElementById('up');
         setupReceivedData(conn, p2pbox);
     });
 
-}); 
+});
