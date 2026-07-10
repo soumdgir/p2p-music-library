@@ -1,3 +1,66 @@
+function setupReceivedData(conn, p2pbox) {
+    
+    const processData = (incomingBox) => {
+        if (!Array.isArray(incomingBox)) return;
+
+        const albumGrid = document.getElementById('album-grid');
+        if (!albumGrid) return;
+        albumGrid.innerHTML = ''; 
+
+        for (const item of incomingBox) {
+            const fileName = item.path.toLowerCase();
+            const isImage = (fileName.endsWith('.jpeg') || fileName.endsWith('.jpg') || fileName.endsWith('.png')) 
+                            && item.binary.type.startsWith('image/');
+
+            if (isImage) {
+                const imageUrl = URL.createObjectURL(item.binary);
+                const imgElement = document.createElement('img');
+                imgElement.src = imageUrl;
+                imgElement.className = 'album-art';
+                imgElement.style.cursor = 'pointer';
+
+                imgElement.addEventListener('click', () => {
+                    const currentFolder = item.path.substring(0, item.path.lastIndexOf('/') + 1);
+
+                    const matchingAudio = incomingBox.find((audioItem) => {
+                        const audioName = audioItem.path.toLowerCase();
+                        return audioItem.path.startsWith(currentFolder) && audioName.endsWith('.mp3');
+                    });
+
+                    if (matchingAudio) {
+                        if (!matchingAudio.binary.type.startsWith('audio/')) {
+                            alert("不正な音声ファイルが検出されました");
+                            return; 
+                        }
+
+                        const audioUrl = URL.createObjectURL(matchingAudio.binary);
+                        const audioPlayer = document.getElementById('main-player');
+                        
+                        if (audioPlayer) {
+                            audioPlayer.src = audioUrl;
+                            audioPlayer.play();
+                            alert(`${currentFolder} を再生します`);
+                        }
+                    } else {
+                        alert("mp3ファイルが見つかりませんでした");
+                    }
+                });
+
+                albumGrid.appendChild(imgElement);
+            }
+        } 
+    };
+
+    // connが本物のP2P接続オブジェクトの場合
+    if (conn && typeof conn.on === 'function') {
+        conn.on('data', (incomingBox) => {
+            processData(incomingBox);
+        });
+    } else {
+        // connがダミー（自分自身）の場合は、引数として届いたp2pboxをそのまま直接処理する
+        processData(p2pbox);
+    }
+}
 const userLanguage = navigator.language || navigator.userLanguage;
 // userLanguage（ブラウザの言語設定）を覗き見るIF文の中
 if (userLanguage.startsWith('ja')) {
