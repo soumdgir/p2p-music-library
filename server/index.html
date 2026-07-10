@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en"> 
+<head>
+    <meta charset="UTF-8">
+    <title>P2P music library</title>
+    <script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
+    <link rel="stylesheet" href="label .css">
+</head>
+    <body>
+        <h1 id="siteName"></h1>
+        <search>
+            <label for="site-search">Search the site:</label>
+            <input type="search" id="site-search" name="q" />
+            <button id="Search"></button>
+        </search>
+        
+        <div class="upload">
+            <label for="media-file" id="media-file-label"></label>
+            <input type="file" id="media-file" webkitdirectory accept="audio/*, image/*" />
+            <fieldset>
+                <legend id="plomise">:</legend>
+
+                    <div>
+                        <input type="checkbox" id="scales" name="scales" checked />
+                        <label for="scales" id="Covenant"></label>
+                    </div>
+
+                    <div>
+                        <input type="checkbox" id="horns" name="horns" />
+                        <label for="horns" id="right"></label>
+                    </div>
+
+            </fieldset>
+               <div class="up">
+                    <button id="up" disabled></button>
+               </div> 
+
+        </div>
+        
+        <audio id="main-player" controls></audio>
+
+        <div id="album-grid"></div>
+
+        <script type="module" src="app.js" defer></script>
+    </body>
